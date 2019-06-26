@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.klaytn.enterpriseproxy.mapper.servicechain">
+    <!-- CHAININFO TABLE RESULTMAP -->
+    <resultMap id="serviceChainMap" type="com.klaytn.enterpriseproxy.router.model.ServiceChain">
+        <result column="id"                                     property="id"/>
+        <result column="name"                                   property="name"/>
+        <result column="owner"                                  property="owner"/>
+        <result column="is_use"                                 property="isUse"/>
+        <result column="start_date"                             property="startDate"/>
+        <result column="end_date"                               property="endDate"/>
+        <result column="register"                               property="register"/>
+        <result column="modify"                                 property="modify"/>
+        <result column="ip_addr"                                property="ipAddr"/>
+    </resultMap>
+
+    <!-- CHAINHOSTINFO TABLE RESULTMAP -->
+    <resultMap id="serviceChainHostMap" type="com.klaytn.enterpriseproxy.router.model.ServiceChainHost">
+        <result column="id"                                     property="id"/>
+        <result column="servicechain_id"                        property="serviceChainId"/>
+        <result column="host"                                   property="host"/>
+        <result column="port"                                   property="port"/>
+        <result column="is_use"                                 property="isUse"/>
+        <result column="category"                               property="category"/>
+        <result column="rpc_type"                               property="rpcType"/>
+        <result column="is_alive"                               property="isAlive"/>
+        <result column="register"                               property="register"/>
+        <result column="modify"                                 property="modify"/>
+        <result column="ip_addr"                                property="ipAddr"/>
+    </resultMap>
+
+    <insert id="insertServiceChain" parameterType="hashmap" useGeneratedKeys="true">
+        INSERT INTO ServiceChain (name,owner,is_use,start_date,end_date,ip_addr)
+        VALUES (#{name},#{owner},0,#{startDate},#{endDate},#{ipAddr})
+
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateServiceChain" parameterType="hashmap">
+        UPDATE
+            ServiceChain
+        SET
+            modify = NOW()
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(name)">
+                ,name = #{name}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(owner)">
+                ,owner = #{owner}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(isUse)">
+                ,is_use = #{isUse}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(startDate)">
+                ,start_date = #{startDate}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(endDate)">
+                ,end_date = #{endDate}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(ipAddr)">
+                ,ip_addr = #{ipAddr}
+            </if>
+        WHERE
+            id = #{id}
+    </update>
+
+    <delete id="deleteServiceChain" parameterType="hashmap">
+        DELETE FROM ServiceChain WHERE id = #{id}
+    </delete>
+
+    <insert id="insertServiceChainHost" parameterType="hashmap" useGeneratedKeys="true">
+        INSERT INTO ServiceChainHost (servicechain_id,host,port,is_use,is_alive,category,ip_addr)
+        VALUES (#{serviceChainId},#{host},#{port},1,0,#{category},#{ipAddr})
+
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateServiceChainHost" parameterType="map">
+        UPDATE
+            ServiceChainHost
+        SET
+            modify = NOW()
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(serviceChainId)">
+                ,servicechain_id = #{serviceChainId}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(host)">
+                ,host = #{host}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(port)">
+                ,port = #{port}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(isUse)">
+                ,is_use = #{isUse}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(category)">
+                ,category = #{category}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(rpcType)">
+                ,rpc_type = #{rpcType}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(isAlive)">
+                ,is_alive = #{isAlive}
+            </if>
+            <if test="@com.klaytn.enterpriseproxy.utils.ObjectUtil@isNotEmpty(ipAddr)">
+                ,ip_addr = #{ipAddr}
+            </if>
+        WHERE
+            id = #{id}
+    </update>
+
+    <delete id="deleteServiceChainHost" parameterType="hashmap">
+        DELETE FROM ServiceChainHost WHERE id = #{id}
+    </delete>
+    
+    <select id="selectChainInfoById" resultMap="serviceChainMap" parameterType="hashmap">
+        SELECT
+            *
+        FROM
+            ServiceChain
+        WHERE
+            id = #{id}
+    </select>
+
+    <select id="selectChainHostById" resultMap="serviceChainHostMap" parameterType="hashmap">
+        SELECT
+            *
+        FROM
+            ServiceChainHost
+        WHERE
+            id = #{id}
+    </select>
+
+    <select id="selectChainInfoByIdAndDate" resultMap="serviceChainMap" parameterType="hashmap">
+        SELECT
+            *
+        FROM
+            ServiceChain
+        WHERE
+            id = #{id}
+        AND
+            start_date <![CDATA[<=]]> #{date}
+        AND
+            end_date > #{date}
+    </select>
+
+
+    <!-- CHAIN INFO BASIC RESULT MAP -->
+    <resultMap id="chainInfoBasicMap" type="com.klaytn.enterpriseproxy.router.model.ChainInfoBasic">
+        <result column="name"                                   property="name"/>
+        <result column="owner"                                  property="owner"/>
+        <result column="type"                                   property="type"/>
+        <result column="is_use"                                 property="isUse"/>
+        <result column="start_date"                             property="startDate"/>
+        <result column="end_date"                               property="endDate"/>
+        <collection property="chainHostInfoList" resultMap="serviceChainHostMap"/>
+    </resultMap>
+
+    <sql id="chainInfoBasicColumns">
+        CHAININFO.name,
+        CHAININFO.owner,
+        CHAININFO.is_use,
+        CHAININFO.start_date,
+        CHAININFO.end_date,
+        CHAINHOST.id,
+        CHAINHOST.servicechain_id,
+        CHAINHOST.category,
+        CHAINHOST.host,
+        CHAINHOST.port,
+        CHAINHOST.is_alive,
+        CHAINHOST.is_use
+    </sql>
+
+    <select id="selectChainInfoBasicByid" resultMap="chainInfoBasicMap" parameterType="map">
+        SELECT
+            <include refid="chainInfoBasicColumns"/>
+        FROM
+            ServiceChain CHAININFO,
+            ServiceChainHost CHAINHOST
+        WHERE
+            CHAININFO.id = #{id}
+        AND
+            CHAININFO.id = CHAINHOST.servicechain_id
+        ORDER BY CHAINHOST.id DESC
+    </select>
+
+    <select id="selectChainInfoBasicByDate" resultMap="chainInfoBasicMap" parameterType="hashmap">
+        SELECT
+            <include refid="chainInfoBasicColumns"/>
+        FROM
+            ServiceChain CHAININFO,
+            ServiceChainHost CHAINHOST
+        WHERE
+            CHAININFO.is_use = 1
+        AND
+            CHAININFO.start_date <![CDATA[<=]]> #{toDate}
+        AND
+            CHAININFO.end_date > #{toDate}
+        AND
+            CHAINHOST.is_use = 1
+        AND
+            CHAININFO.id = CHAINHOST.servicechain_id
+    </select>
+
+    <select id="selectChainInfoBasicByOwner" resultMap="chainInfoBasicMap" parameterType="hashmap">
+        SELECT
+        <include refid="chainInfoBasicColumns"/>
+        FROM
+            ServiceChain CHAININFO,
+            ServiceChainHost CHAINHOST
+        WHERE
+            CHAININFO.owner = #{owner}
+        AND
+            CHAININFO.id = CHAINHOST.servicechain_id
+        ORDER BY CHAININFO.id DESC
+    </select>
+
+    <select id="selectChainInfoBasicAll" resultMap="chainInfoBasicMap">
+        SELECT
+            <include refid="chainInfoBasicColumns"/>
+        FROM
+            ServiceChain CHAININFO,
+            ServiceChainHost CHAINHOST
+        WHERE
+            CHAININFO.id = CHAINHOST.servicechain_id
+        ORDER BY CHAININFO.id DESC
+    </select>
+</mapper>

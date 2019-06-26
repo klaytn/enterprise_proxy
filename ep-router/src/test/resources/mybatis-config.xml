@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <setting name="useGeneratedKeys" value="true"/>
+        <setting name="callSettersOnNulls" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="true"/>
+        <setting name="defaultExecutorType" value="SIMPLE"/>
+        <setting name="defaultStatementTimeout" value="200"/>
+    </settings>
+
+    <typeHandlers>
+        <typeHandler javaType="java.sql.Timestamp" handler="org.apache.ibatis.type.DateTypeHandler" />
+        <typeHandler javaType="java.sql.Time" handler="org.apache.ibatis.type.DateTypeHandler" />
+        <typeHandler javaType="java.sql.Date" handler="org.apache.ibatis.type.DateTypeHandler" />
+    </typeHandlers>
+</configuration>

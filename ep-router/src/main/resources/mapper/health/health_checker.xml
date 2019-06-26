@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.klaytn.enterpriseproxy.mapper.healthchecker">
+    <!-- CHAINHOSTHEALTHCHECKLOG TABLE RESULTMAP -->
+    <resultMap id="chainHostHealthCheckLogMap" type="com.klaytn.enterpriseproxy.router.model.ServiceChainHostHealthCheck">
+        <result column="id"                                     property="id"/>
+        <result column="chain_host_id"                          property="chainHostId"/>
+        <result column="check_type"                             property="checkType"/>
+        <result column="comment"                                property="comment"/>
+        <result column="checkdate"                              property="checkDate"/>
+    </resultMap>
+
+
+    <insert id="insertChainHostHealthCheckLog" parameterType="hashmap">
+        INSERT INTO ServiceChainHostHealthCheck(
+            chain_host_id,
+            check_type,
+            comment
+        ) VALUES
+        <foreach item="item" index="index" collection="collector" open="(" separator="),(" close=")">
+            #{item.chainHostId},
+            #{item.checkType},
+            #{item.comment}
+        </foreach>
+    </insert>
+
+    <update id="updateIsAliveChainInfoHost" parameterType="hashmap">
+        UPDATE
+            ServiceChainHost
+        SET
+            is_alive = #{isAlive}
+        WHERE
+            id IN
+        <foreach item="item" index="index" collection="collector" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <select id="selectServiceChainHostHealthCheckList" resultMap="chainHostHealthCheckLogMap">
+        SELECT
+            *
+        FROM
+            ServiceChainHostHealthCheck
+        ORDER BY id DESC
+        LIMIT 500
+    </select>
+</mapper>

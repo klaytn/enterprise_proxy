@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.klaytn.enterpriseproxy.mapper.txgw">
+    <insert id="insertTxGatewayLog" parameterType="map">
+        INSERT INTO TxGatewayLog (
+            method,
+            query_string,
+            request_uri,
+            servlet_path,
+            path_info,
+            header_host,
+            header_user_agent,
+            header_accept,
+            header_accept_language,
+            header_accept_encoding,
+            header_referer,
+            header_rpccaller,
+            header_origin,
+            header_connection,
+            header_content_length,
+            character_encoding,
+            content_length,
+            content_type,
+            local_addr,
+            locale,
+            local_name,
+            local_port,
+            protocol,
+            remote_addr,
+            remote_host,
+            remote_port,
+            scheme,
+            server_name,
+            server_port,
+            request_params
+        ) VALUES
+        <foreach item="item" index="index" collection="collector" open="(" separator="),(" close=")">
+            #{item.method},
+            #{item.queryString},
+            #{item.requestUri},
+            #{item.servletPath},
+            #{item.pathInfo},
+            #{item.headerHost},
+            #{item.headerUserAgent},
+            #{item.headerAccept},
+            #{item.headerAcceptLanguage},
+            #{item.headerAcceptEncoding},
+            #{item.headerReferer},
+            #{item.headerRpcCaller},
+            #{item.headerOrigin},
+            #{item.headerConnection},
+            #{item.headerContentLength},
+            #{item.characterEncoding},
+            #{item.contentLength},
+            #{item.contentType},
+            #{item.localAddr},
+            #{item.locale},
+            #{item.localName},
+            #{item.localPort},
+            #{item.protocol},
+            #{item.remoteAddr},
+            #{item.remoteHost},
+            #{item.remotePort},
+            #{item.scheme},
+            #{item.serverName},
+            #{item.serverPort},
+            #{item.requestParams}
+        </foreach>
+    </insert>
+
+
+    <resultMap id="txGatewayLogMap" type="com.klaytn.enterpriseproxy.txgw.model.TxGatewayLog">
+        <result column="id"                                     property="id"/>
+        <result column="method"                                 property="method"/>
+        <result column="query_string"                           property="queryString"/>
+        <result column="request_uri"                            property="requestUri"/>
+        <result column="servlet_path"                           property="servletPath"/>
+        <result column="path_info"                              property="pathInfo"/>
+        <result column="header_host"                            property="headerHost"/>
+        <result column="header_user_agent"                      property="headerUserAgent"/>
+        <result column="header_accept"                          property="headerAccept"/>
+        <result column="header_accept_language"                 property="headerAcceptLanguage"/>
+        <result column="header_referer"                         property="headerReferer"/>
+        <result column="header_rpcccaller"                      property="headerRpcCaller"/>
+        <result column="header_origin"                          property="headerOrigin"/>
+        <result column="header_connection"                      property="headerConnection"/>
+        <result column="header_content_length"                  property="headerContentLength"/>
+        <result column="character_encoding"                     property="characterEncoding"/>
+        <result column="content_length"                         property="contentLength"/>
+        <result column="content_type"                           property="contentType"/>
+        <result column="local_addr"                             property="localAddr"/>
+        <result column="locale"                                 property="locale"/>
+        <result column="local_name"                             property="localName"/>
+        <result column="local_port"                             property="localPort"/>
+        <result column="protocol"                               property="protocol"/>
+        <result column="remote_addr"                            property="remoteAddr"/>
+        <result column="remote_host"                            property="remoteHost"/>
+        <result column="remote_port"                            property="remotePort"/>
+        <result column="scheme"                                 property="scheme"/>
+        <result column="server_name"                            property="serverName"/>
+        <result column="server_port"                            property="serverPort"/>
+        <result column="request_params"                         property="requestParams"/>
+        <result column="register"                               property="register"/>
+    </resultMap>
+    
+    <select id="selectTxGateWayLogList" resultMap="txGatewayLogMap">
+        SELECT
+            *
+        FROM
+            TxGatewayLog
+        ORDER BY id DESC
+        LIMIT 500
+    </select>
+</mapper>
