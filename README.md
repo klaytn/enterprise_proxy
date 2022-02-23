@@ -1,4 +1,4 @@
-# Enterprise Proxy
+# DEPRECATED - no longer actively maintained
 
 EP stands for enterprise proxy. And this feature differentiates Klaytn from other blockchain platforms. EP is made to satisfy the business requirements of enterprise blockchain users and service providers while still containing the essential quality of public blockchain. Please find more details in [Official documentation of EP.](https://docs.klaytn.com/klaytn/enterprise_proxy)
 
